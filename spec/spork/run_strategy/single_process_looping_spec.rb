@@ -9,7 +9,6 @@ describe Spork::RunStrategy::SingleProcessLooping do
   end
 
   it "returns the result of the run_tests method from the forked child" do
-    puts "helper is #{Process.pid}"
     create_helper_file
     @fake_framework.stub!(:run_tests).and_return("tests were ran")
     @run_strategy.run("test", STDOUT, STDIN).should == "tests were ran"
