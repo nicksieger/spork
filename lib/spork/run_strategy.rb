@@ -30,8 +30,10 @@ class Spork::RunStrategy
     def self.factory(test_framework)
       if RUBY_PLATFORM =~ /mswin|mingw/
         Spork::RunStrategy::Magazine.new(test_framework)
-      else
+      elsif Spork::RunStrategy::Forking.available?
         Spork::RunStrategy::Forking.new(test_framework)
+      else
+        Spork::RunStrategy::SingleProcessLooping.new(test_framework)
       end
     end
 
