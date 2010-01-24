@@ -27,8 +27,15 @@ class Spork::RunStrategy
   end
 
   protected
-    def self.factory(test_framework)
-      if RUBY_PLATFORM =~ /mswin|mingw/
+    def self.factory(test_framework, options)
+      if options[:run_strategy]
+        klass = eval(options[:run_strategy])
+        if !klass.available?
+          raise klass.to_s + " is not available"
+        else
+          klass.new(test_framework)
+        end
+      elsif RUBY_PLATFORM =~ /mswin|mingw/
         Spork::RunStrategy::Magazine.new(test_framework)
       elsif Spork::RunStrategy::Forking.available?
         Spork::RunStrategy::Forking.new(test_framework)
