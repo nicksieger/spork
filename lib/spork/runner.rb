@@ -23,7 +23,7 @@ module Spork
       opt.on("-d", "--diagnose")  {|ignore| @options[:diagnose] = true }
       opt.on("-h", "--help")  {|ignore| @options[:help] = true }
       opt.on("-p", "--port [PORT]") {|port| @options[:port] = port }
-      opt.on("-r", "--run_strategy [RunStrategy]") {|run_strategy| @options[:run_strategy] = run_strategy}
+      opt.on("-r", "--run_strategy [SingleProcessExits|SingleProcessLooping|Forking]") {|run_strategy| @options[:run_strategy] = run_strategy}
       non_option_args = args.select { |arg| ! args[0].match(/^-/) }
       @options[:server_matcher] = non_option_args[0]
       opt.parse!(args)
