@@ -27,8 +27,7 @@ class Spork::Server
     trap("SIGTERM") { abort; exit!(0) }
     trap("USR2") { abort; restart } if Signal.list.has_key?("USR2")
     @drb_service = DRb.start_service("druby://127.0.0.1:#{port}", self)
-    if @run_strategy != 'SingleProcessLooping'
-      # stop service for SingleProcessExits and Forking run strategies
+    if @run_strategy.class != Spork::RunStrategy::SingleProcessLooping
       Spork.each_run { @drb_service.stop_service }
     end
     stderr.puts "Spork is ready and listening on #{port}!"
