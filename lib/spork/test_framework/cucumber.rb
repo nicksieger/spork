@@ -9,7 +9,15 @@ class Spork::TestFramework::Cucumber < Spork::TestFramework
   end
 
   def step_mother
-    @step_mother ||= ::Cucumber::StepMother.new.tap {|sm| sm.load_programming_language('rb')}
+    @step_mother ||= ::Cucumber::StepMother.new.tap do |sm|
+      def sm.reset_steps_and_scenarios
+        @steps = []
+        @scenarios = []
+      end
+      sm.load_programming_language('rb')
+    end
+    @step_mother.reset_steps_and_scenarios
+    @step_mother
   end
 
   def run_tests(argv, stderr, stdout)
