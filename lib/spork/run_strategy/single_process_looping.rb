@@ -10,10 +10,11 @@ class Spork::RunStrategy::SingleProcessLooping < Spork::RunStrategy
     return if @running # ignore later tests
     @running = true
     $stdout, $stderr = stdout, stderr
-    Spork.exec_each_run # TODO preload this [?]
     load test_framework.helper_file
+    Spork.exec_each_run # TODO preload this [?]
+    test_framework.run_tests(argv, stderr, stdout)
+  ensure
     @running = false
-    return test_framework.run_tests(argv, stderr, stdout)
   end
 
   def abort
