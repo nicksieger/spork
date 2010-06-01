@@ -11,8 +11,10 @@ class Spork::RunStrategy::SingleProcessLooping < Spork::RunStrategy
     @running = true
     $stdout, $stderr = stdout, stderr
     load test_framework.helper_file
-    Spork.exec_each_run # TODO preload this [?]
-    test_framework.run_tests(argv, stderr, stdout)
+    Spork.exec_each_run
+    result = test_framework.run_tests(argv, stderr, stdout)
+    Spork.exec_after_each_run
+    result
   ensure
     @running = false
   end
@@ -22,7 +24,7 @@ class Spork::RunStrategy::SingleProcessLooping < Spork::RunStrategy
   end
 
   def preload
-    test_framework.preload    
+    test_framework.preload
   end
 
   def running?
