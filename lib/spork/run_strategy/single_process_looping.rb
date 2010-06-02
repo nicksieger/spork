@@ -19,10 +19,6 @@ class Spork::RunStrategy::SingleProcessLooping < Spork::RunStrategy
     @running = false
   end
 
-  def abort
-    raise 'not supported yet'
-  end
-
   def preload
     test_framework.preload
   end
@@ -30,5 +26,4 @@ class Spork::RunStrategy::SingleProcessLooping < Spork::RunStrategy
   def running?
     @running
   end
-
 end

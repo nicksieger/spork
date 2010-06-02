@@ -53,6 +53,11 @@ class Spork::Server
     run_strategy.abort
   end
 
+  def shutdown
+    run_strategy.abort rescue nil
+    @drb_service.stop_service
+  end
+
   private
     def restart
       stderr.puts "restarting"
