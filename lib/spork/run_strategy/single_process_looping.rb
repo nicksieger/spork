@@ -19,6 +19,10 @@ class Spork::RunStrategy::SingleProcessLooping < Spork::RunStrategy
     @running = false
   end
 
+  def abort
+    # Don't need to do anything
+  end
+
   def preload
     test_framework.preload
   end
