@@ -54,7 +54,10 @@ class Spork::Server
   end
 
   def shutdown
-    run_strategy.abort rescue nil
+    begin
+      run_strategy.abort
+    rescue Exception
+    end
     @drb_service.stop_service
   end
 
