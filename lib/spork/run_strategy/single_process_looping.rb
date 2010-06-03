@@ -9,6 +9,7 @@ class Spork::RunStrategy::SingleProcessLooping < Spork::RunStrategy
   def run(argv, stderr, stdout)
     return if @running # ignore later tests
     @running = true
+    saved_features = $LOADED_FEATURES.dup
     $stdout, $stderr = stdout, stderr
     load test_framework.helper_file
     Spork.exec_each_run
@@ -16,6 +17,8 @@ class Spork::RunStrategy::SingleProcessLooping < Spork::RunStrategy
     Spork.exec_after_each_run
     result
   ensure
+    $LOADED_FEATURES.clear
+    $LOADED_FEATURES.concat(saved_features)
     @running = false
   end
 
