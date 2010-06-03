@@ -9,16 +9,18 @@ class Spork::RunStrategy::SingleProcessLooping < Spork::RunStrategy
   def run(argv, stderr, stdout)
     return if @running # ignore later tests
     @running = true
-    saved_features = $LOADED_FEATURES.dup
     $stdout, $stderr = stdout, stderr
     load test_framework.helper_file
+    saved_features = $LOADED_FEATURES.dup
     Spork.exec_each_run
     result = test_framework.run_tests(argv, stderr, stdout)
     Spork.exec_after_each_run
     result
   ensure
-    $LOADED_FEATURES.clear
-    $LOADED_FEATURES.concat(saved_features)
+    # Remove project paths from $LOADED_FEATURES that were loaded during the run
+    ($LOADED_FEATURES - saved_features).each do |f|
+      $LOADED_FEATURES.delete(f) if File.exist?(File.expand_path(f))
+    end
     @running = false
   end
 
