@@ -21,6 +21,7 @@ class Spork::RunStrategy::SingleProcessLooping < Spork::RunStrategy
     ($LOADED_FEATURES - saved_features).each do |f|
       $LOADED_FEATURES.delete(f) if File.exist?(File.expand_path(f))
     end
+    Spork.already_ran.clear
     @running = false
   end
 

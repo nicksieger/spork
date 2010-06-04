@@ -37,12 +37,7 @@ class Spork::TestFramework::RSpec < Spork::TestFramework
     def example_group.reset_state
       examples.clear
       children.clear
-      constants.each do |c|
-        if c =~ /^Nested_/
-          puts "#{self}: removing #{c}"
-          remove_const(c)
-        end
-      end
+      constants.each {|c| remove_const(c) if c =~ /^Nested_/ }
     end
     example_group.reset_state
   end

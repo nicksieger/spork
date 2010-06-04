@@ -115,6 +115,10 @@ module Spork
       )
     end
 
+    def already_ran
+      @already_ran ||= []
+    end
+
     private
       def activate_after_each_run_at_exit_hook
         Kernel.module_eval do
@@ -127,10 +131,6 @@ module Spork
       def alias_method_names(method_name, feature)
         /^(.+?)([\?\!]{0,1})$/.match(method_name.to_s)
         ["#{$1}_without_spork#{$2}", "#{$1}_with_spork#{$2}"]
-      end
-      
-      def already_ran
-        @already_ran ||= []
       end
       
       def expanded_caller(caller_line)
