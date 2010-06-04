@@ -10,9 +10,7 @@ class Spork::TestFramework::RSpec < Spork::TestFramework
         def runner.installed_at_exit?; true; end # no autorun
         ::RSpec::Core::Runner.new.run(argv)
       ensure
-        ::RSpec.world.example_groups.clear
-        ::RSpec.world.filtered_examples.clear
-        ::RSpec.world.shared_example_groups.clear
+        reset_rspec2_state
         $stdout, $stderr = prevout, preverr
       end
     else
@@ -24,5 +22,28 @@ class Spork::TestFramework::RSpec < Spork::TestFramework
         )
       )
     end
+  end
+
+  def reset_rspec2_state
+    ::RSpec.world.example_groups.clear
+    ::RSpec.world.filtered_examples.clear
+    ::RSpec.world.shared_example_groups.clear
+    config = ::RSpec.configuration
+    def config.reset_state
+      @formatter = nil
+    end
+    config.reset_state
+    example_group = ::RSpec::Core::ExampleGroup
+    def example_group.reset_state
+      examples.clear
+      children.clear
+      constants.each do |c|
+        if c =~ /^Nested_/
+          puts "#{self}: removing #{c}"
+          remove_const(c)
+        end
+      end
+    end
+    example_group.reset_state
   end
 end
